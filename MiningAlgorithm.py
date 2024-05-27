@@ -45,7 +45,8 @@ def is_valid_transaction(tx):                                                   
     total_input_value = sum(input_tx['prevout']['value'] for input_tx in tx['vin'])
     total_output_value = sum(output_tx['value'] for output_tx in tx['vout'])
     return total_input_value > total_output_value
-  
+    
+# TAKE INPUT FROM MEMPOOL
 transactions = []
 for filename in os.listdir(Mempool_folder):
     if filename.endswith(".json"):
