@@ -2,16 +2,20 @@ import hashlib
 import json
 import os
 import binascii
+import datetime
+import calendar
+import time
 
-OUTPUT_FILE = 'output.txt'
-Mempool_folder ='mempool'
+ut = time.time()
 
 def SHA256(data):
     return hashlib.sha256(data.encode('utf-8')).hexdigest()
+OUTPUT_FILE = 'output.txt'
+Mempool_folder ='mempool'
 
 def reverse_byte_order(hexstr): # Function to convert into reverse_byte_order
-    return ''.join(reversed([hexstr[i:i+2] for i in range(0, len(hexstr), 2)]))
-    
+    REV = ''.join(reversed([hexstr[i:i+2] for i in range(0, len(hexstr), 2)]))
+    return REV
 
 def HASH_two(firstTxHash, secondTxHash): #Function to hash 2 consecutive txids 
     unhex_reverse_first = binascii.unhexlify(firstTxHash)[::-1]    # binascii.unhexlify() converts the hexadecimal string (txid) into bytes.
@@ -53,11 +57,13 @@ for filename in os.listdir(Mempool_folder):
 print(transactions)    
 print(len(transactions))    
 print(merkleCalculator(transactions))
+#the output will appear as b'63385f87b46b3c6abb56e8041c9cb082c7c94bc919c165cafc8f1311f86399e6'
+# where b' denotes byte string in python.......  
 version = '01000000' # All transactions have same version
 merkle_root = "63385f87b46b3c6abb56e8041c9cb082c7c94bc919c165cafc8f1311f86399e6" # calculated via merkleCalculator function
 previous_hash = "0000000000000000000000000000000000000000000000000000000000000000" # Given
-timestampdec = '1628708433' # Any time taken
-timestamp = '61141E51' #time  in hex
+timestampdec = int(ut) # Any time taken
+timestamp = str(hex(timestampdec).lstrip("0x")) #time  in hex
 difficulty_target = '1f00ffff'# in 4 bytes
 target = '0x0fffffff00000000000000000000000000000000000000000000000000000000' 
 #for n_o_n_c_e
@@ -93,6 +99,7 @@ block_header = {
     "difficulty_target": "0000"+target.lstrip("0x"), #to remove  0x from hex notation and 0000 is added 
     "nonce": nonce
 }
+
 with open(OUTPUT_FILE, 'w') as f: # to add all text in output.txt in writng mode
     f.write("Block Header:\n")
     f.write(json.dumps(block_header, indent=2) + "\n\n")
@@ -101,7 +108,7 @@ with open(OUTPUT_FILE, 'w') as f: # to add all text in output.txt in writng mode
     f.write("Transaction IDs:\n")
     for i in range(len(transactions)):
         f.write(f"{transactions[i]}\n")
-            
+           
 print(nonce)
 blockHead = s +'0'+str(hex(nonce).lstrip("0x"))
 print(blockHead+'000000')
