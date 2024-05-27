@@ -22,9 +22,9 @@ def merkleCalculator(transactions):
         return transactions[0]
     newHashList = []
     for i in range(0, len(transactions)-1, 2):
-        newHashList.append(hashIt(transactions[i], transactions[i+1]))
+        newHashList.append(HASH_two(transactions[i], transactions[i+1]))
     if len(transactions) % 2 == 1: # odd, hash last item twice
-        newHashList.append(hashIt(transactions[-1], transactions[-1]))
+        newHashList.append(HASH_two(transactions[-1], transactions[-1]))
     return merkleCalculator(newHashList)
     
 def is_valid_transaction(tx):
