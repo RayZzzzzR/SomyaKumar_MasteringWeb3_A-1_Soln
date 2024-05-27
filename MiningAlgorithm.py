@@ -3,10 +3,11 @@ import json
 import os
 import binascii
 
-def SHA256(data):
-    return hashlib.sha256(data.encode('utf-8')).hexdigest()
 OUTPUT_FILE = 'output.txt'
 Mempool_folder ='mempool'
+
+def SHA256(data):
+    return hashlib.sha256(data.encode('utf-8')).hexdigest()
 
 def reverse_byte_order(hexstr): # Function to convert into reverse_byte_order
     return ''.join(reversed([hexstr[i:i+2] for i in range(0, len(hexstr), 2)]))
