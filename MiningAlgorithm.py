@@ -65,7 +65,7 @@ previous_hash = "000000000000000000000000000000000000000000000000000000000000000
 timestampdec = int(ut) # Any time taken
 timestamp = str(hex(timestampdec).lstrip("0x")) #time  in hex
 difficulty_target = '1f00ffff'# in 4 bytes
-target = '0x0fffffff00000000000000000000000000000000000000000000000000000000' 
+target = '0x0000ffff00000000000000000000000000000000000000000000000000000000' #in 32 bytes
 #for n_o_n_c_e
 s = version + reverse_byte_order(previous_hash) + reverse_byte_order(merkle_root) + reverse_byte_order(timestamp) + reverse_byte_order(difficulty_target)
 # as merkle root and others were in reverse byte order so we again converted then into natural byte order by using reverse_byte_order function
