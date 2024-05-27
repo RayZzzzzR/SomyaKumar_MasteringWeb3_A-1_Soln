@@ -9,8 +9,8 @@ OUTPUT_FILE = 'output.txt'
 Mempool_folder ='mempool'
 
 def reverse_byte_order(hexstr): # Function to convert into reverse_byte_order
-    REV = ''.join(reversed([hexstr[i:i+2] for i in range(0, len(hexstr), 2)]))
-    return REV
+    return ''.join(reversed([hexstr[i:i+2] for i in range(0, len(hexstr), 2)]))
+    
 
 def HASH_two(firstTxHash, secondTxHash): #Function to hash 2 consecutive txids 
     unhex_reverse_first = binascii.unhexlify(firstTxHash)[::-1]    # binascii.unhexlify() converts the hexadecimal string (txid) into bytes.
