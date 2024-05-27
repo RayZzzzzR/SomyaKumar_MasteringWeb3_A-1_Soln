@@ -3,6 +3,8 @@ import json
 import os
 import binascii
 
+def SHA256(data):
+    return hashlib.sha256(data.encode('utf-8')).hexdigest()
 OUTPUT_FILE = 'output.txt'
 Mempool_folder ='mempool'
 
