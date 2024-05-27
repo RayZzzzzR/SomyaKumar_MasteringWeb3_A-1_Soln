@@ -6,25 +6,25 @@ import datetime
 import calendar
 import time
 
-ut = time.time()
-
+ut = time.time() #in unix epoch timeline
 def SHA256(data):
     return hashlib.sha256(data.encode('utf-8')).hexdigest()
+    
 OUTPUT_FILE = 'output.txt'
-Mempool_folder ='mempool'
+Mempool_folder ='mempool' #names based on my folder that I created in my local PC
 
-def reverse_byte_order(hexstr): # Function to convert into reverse_byte_order
+def reverse_byte_order(hexstr):                                                 # Function to convert into reverse_byte_order
     REV = ''.join(reversed([hexstr[i:i+2] for i in range(0, len(hexstr), 2)]))
     return REV
 
-def HASH_two(firstTxHash, secondTxHash): #Function to hash 2 consecutive txids 
+def HASH_two(firstTxHash, secondTxHash):                                        #Function to hash 2 consecutive txids 
     unhex_reverse_first = binascii.unhexlify(firstTxHash)[::-1]    # binascii.unhexlify() converts the hexadecimal string (txid) into bytes.
     unhex_reverse_second = binascii.unhexlify(secondTxHash)[::-1]  # [:: -1] reverses the byte order to little-endian format (natural byte order)
     concat_inputs = unhex_reverse_first+unhex_reverse_second
     final_hash_inputs = hashlib.sha256(hashlib.sha256(concat_inputs).digest()).digest() # APPLY HASH256 
     return binascii.hexlify(final_hash_inputs[::-1]) # Again reversed
  
-def merkleCalculator(transactions):
+def merkleCalculator(transactions):                                              #To calculate merkle root
     if len(transactions) == 1:
         return transactions[0]
     newHashList = []
@@ -34,7 +34,7 @@ def merkleCalculator(transactions):
         newHashList.append(HASH_two(transactions[-1], transactions[-1]))
     return merkleCalculator(newHashList)
     
-def is_valid_transaction(tx):
+def is_valid_transaction(tx):                                                     #Transaction Validator function
     if 'vin' not in tx or 'vout' not in tx:
         return False
 
@@ -54,11 +54,12 @@ for filename in os.listdir(Mempool_folder):
             if is_valid_transaction(tx):
                 transactions.append(os.path.splitext(filename)[0])
                 
-print(transactions)    
-print(len(transactions))    
-print(merkleCalculator(transactions))
+print(transactions)                    #to print all txids
+print(len(transactions))               #number of validated txids
+print(merkleCalculator(transactions))  #will print merkle root!!
 #the output will appear as b'63385f87b46b3c6abb56e8041c9cb082c7c94bc919c165cafc8f1311f86399e6'
-# where b' denotes byte string in python.......  
+# where b' denotes byte string in python.......we just have to take the string between the commas '_________'
+
 version = '01000000' # All transactions have same version
 merkle_root = "63385f87b46b3c6abb56e8041c9cb082c7c94bc919c165cafc8f1311f86399e6" # calculated via merkleCalculator function
 previous_hash = "0000000000000000000000000000000000000000000000000000000000000000" # Given
@@ -66,16 +67,20 @@ timestampdec = int(ut) # Any time taken
 timestamp = str(hex(timestampdec).lstrip("0x")) #time  in hex
 difficulty_target = '1f00ffff'# in 4 bytes
 target = '0x0000ffff00000000000000000000000000000000000000000000000000000000' #in 32 bytes
+
 #for n_o_n_c_e
 s = version + reverse_byte_order(previous_hash) + reverse_byte_order(merkle_root) + reverse_byte_order(timestamp) + reverse_byte_order(difficulty_target)
 # as merkle root and others were in reverse byte order so we again converted then into natural byte order by using reverse_byte_order function
 nonce = 0 #initially
 while True:
-    value = s + str(nonce)
+    value = s + str(reverse_byte_order(hex(nonce).lstrip('0x')))
     hash_value = hashlib.sha256(value.encode('utf-8')).hexdigest()
-    if int(hash_value, 16)<int(target, 16): #converting hex into int for comparision
+    if int(hash_value, 16)<int(target, 16):      #converting hex into int for comparision
         break
     nonce += 1
+    
+    
+#THIS PART IS FOR OUTPUT.TXT FILE :-   
     
 coinbase_tx = {
     "txid": SHA256("coinbase"),
@@ -109,6 +114,7 @@ with open(OUTPUT_FILE, 'w') as f: # to add all text in output.txt in writng mode
     for i in range(len(transactions)):
         f.write(f"{transactions[i]}\n")
            
-print(nonce)
-blockHead = s +'0'+str(hex(nonce).lstrip("0x"))
-print(blockHead+'000000')
+print(nonce) # will print nonce in decimal form
+blockHeader = s+str(reverse_byte_order(hex(nonce).lstrip("0x"))) # concatenating nonce as reverse byte order
+print(blockHeader+((160-len(blockHeader))*'0'))
+#code to print Block Header
