@@ -5,8 +5,6 @@
 So.....Let's understand the implementation behind my simulation :)
 `mempool` is a temporary storage that contains all the transactions. New transactions are stored in a node's memory pool while they're waiting to get mined on to the blockchain. We use `mempool` to sort out conflicting transactions.
 
-<iframe src="Mastering Web 3.0.pdf" width="100%" height="600px"></iframe>
-
 Pseudo Code of Block constructor :-
 IMPORTS
 ```py
